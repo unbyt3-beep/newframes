@@ -10,9 +10,16 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+interface SWOTData {
+  strengths: string[];
+  weaknesses: string[];
+  opportunities: string[];
+  threats: string[];
+}
+
 export default function SWOTAnalysis() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<SWOTData | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
