@@ -16,28 +16,39 @@ export default function About() {
 
   useEffect(() => {
     setMounted(true);
-    setAbout(getSiteData().about);
+    getSiteData().then(data => setAbout(data.about));
   }, []);
 
   useEffect(() => {
     if (!about) return;
 
-    gsap.fromTo(ref1.current, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ref1.current, start: "top 80%" } });
-    gsap.fromTo(ref2.current, { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ref2.current, start: "top 80%" } });
-
-    if (visionRef.current) {
-      gsap.fromTo(Array.from(visionRef.current.children),
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: "power3.out", scrollTrigger: { trigger: visionRef.current, start: "top 80%" } }
+    const ctx = gsap.context(() => {
+      gsap.fromTo(ref1.current, 
+        { opacity: 0, x: -50 }, 
+        { opacity: 1, x: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ref1.current, start: "top 80%" } }
       );
-    }
-
-    if (missionRef.current) {
-      gsap.fromTo(Array.from(missionRef.current.children),
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: "power3.out", scrollTrigger: { trigger: missionRef.current, start: "top 80%" } }
+      
+      gsap.fromTo(ref2.current, 
+        { opacity: 0, x: 50 }, 
+        { opacity: 1, x: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ref2.current, start: "top 80%" } }
       );
-    }
+
+      if (visionRef.current) {
+        gsap.fromTo(Array.from(visionRef.current.children),
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: "power3.out", scrollTrigger: { trigger: visionRef.current, start: "top 80%" } }
+        );
+      }
+
+      if (missionRef.current) {
+        gsap.fromTo(Array.from(missionRef.current.children),
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: "power3.out", scrollTrigger: { trigger: missionRef.current, start: "top 80%" } }
+        );
+      }
+    });
+
+    return () => ctx.revert();
   }, [about]);
 
   if (!mounted || !about) return null;
@@ -115,7 +126,7 @@ export default function About() {
             <h3 className={styles.strategyTitle}>OUR MISSION</h3>
             <div className={styles.missionGrid} ref={missionRef}>
               {missionPoints.map((point, index) => (
-                <div key={index} className={styles.missionCard}>
+                <div key={`mission-${index}`} className={styles.missionCard}>
                   <div className={styles.missionIcon}>◈</div>
                   <p className={styles.missionText}>{point}</p>
                 </div>
@@ -127,7 +138,7 @@ export default function About() {
             <h3 className={styles.strategyTitle}>OUR VISION</h3>
             <div className={styles.visionGrid} ref={visionRef}>
               {visionPoints.map((point, index) => (
-                <div key={index} className={styles.visionCard}>
+                <div key={`vision-${index}`} className={styles.visionCard}>
                   <div className={styles.visionIcon}>✦</div>
                   <p className={styles.visionText}>{point}</p>
                 </div>

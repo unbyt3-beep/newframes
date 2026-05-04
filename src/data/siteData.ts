@@ -1,3 +1,4 @@
+import { supabase } from "@/lib/supabase";
 // ============================================
 // Frames n Spaces — Central Data Store
 // Premium Consultancy & Advisory
@@ -79,7 +80,7 @@ export interface SiteData {
   whatWeDo: WhatWeDoItem[];
   swot: SWOTData;
   threatsToStrengths: ThreatToStrengthItem[];
-  clientele: string[];
+  clientele: { name: string; logo: string }[];
 }
 
 export interface ThreatToStrengthItem {
@@ -148,10 +149,32 @@ export const defaultWhatWeDo: WhatWeDoItem[] = [
 ];
 
 export const defaultSWOT: SWOTData = {
-  strengths: ["Agile & Adaptive", "Strong founding Team", "Customer Centric Approach", "Ethical Practices"],
-  weaknesses: ["Limited brand recall compared to CBRE/JLL/C&W/Colliers.", "Limited Portfolio of completed large scale projects", "Supplier ecosystem is still being strengthen & diversified."],
-  opportunities: ["Hyderabad IT expansion.", "Co-working and GCC office growth.", "Government infra and smart city projects e.g. RRR"],
-  threats: ["Direct Contractor Bypass", "Heavy dependency on large projects (cash flow risk).", "Dependency on Real Estate"],
+  strengths: [
+    "Expertise & experience: Specialized knowledge in project planning, execution, and monitoring across industries.",
+    "Process efficiency: Ability to streamline workflow, reduce delays, and optimize resource allocation.",
+    "Risk management: Strong frameworks for identifying, mitigating, and managing risk.",
+    "Client trust: Reputation for delivering projects on time."
+  ],
+  weaknesses: [
+    "Dependence",
+    "Limited differentiation.",
+    "Scalability challenges.",
+    "Resistance to change."
+  ],
+  opportunities: [
+    "Growing demand.",
+    "Digital transformation.",
+    "Global transformation.",
+    "Sustainable project.",
+    "Training & advisory services."
+  ],
+  threats: [
+    "Economic uncertainty.",
+    "Competition.",
+    "Technology disruption.",
+    "Client in-house teams.",
+    "Regulatory & compliance risk."
+  ],
 };
 
 export const defaultThreatsToStrengths: ThreatToStrengthItem[] = [
@@ -177,8 +200,18 @@ export const defaultThreatsToStrengths: ThreatToStrengthItem[] = [
   }
 ];
 
-export const defaultClientele: string[] = [
-  "Hallmark Health Care Solutions", "Kaara", "wellknox", "Coromandel", "NAGARJUNA NACL", "NanoHealth", "INFINITE", "WATANIA SOLUTIONS CO.", "CUBIC", "ALLEGRO microsystems", "Apple"
+export const defaultClientele: { name: string; logo: string }[] = [
+  { name: "Coromandel", logo: "" },
+  { name: "NAGARJUNA NACL", logo: "" },
+  { name: "ALLEGRO Microsystems", logo: "" },
+  { name: "Wellknox", logo: "" },
+  { name: "Apple", logo: "" },
+  { name: "Kaara", logo: "" },
+  { name: "Hallmark Health Care", logo: "" },
+  { name: "NanoHealth", logo: "" },
+  { name: "Infinite", logo: "" },
+  { name: "Watania Solutions", logo: "" },
+  { name: "Cubic", logo: "" },
 ];
 
 export const defaultServices: Service[] = [
@@ -354,39 +387,34 @@ export const defaultStats: Stat[] = [
 
 const STORAGE_KEY = "fns_site_data";
 const VERSION_KEY = "fns_data_version";
-const DATA_VERSION = "4"; // Bump this to force a data reset when defaults change
+const DATA_VERSION = "7"; // Bump this to force a data reset when defaults change
 const PASSCODE_KEY = "fns_admin_passcode";
 const AUTH_KEY = "fns_admin_auth";
 
-export function getSiteData(): SiteData {
-  if (typeof window === "undefined") {
-    return {
-      hero: defaultHero,
-      about: defaultAbout,
-      services: defaultServices,
-      executions: defaultExecutions,
-      blogs: defaultBlogs,
-      testimonials: defaultTestimonials,
-      stats: defaultStats,
-      whatWeDo: defaultWhatWeDo,
-      swot: defaultSWOT,
-      threatsToStrengths: defaultThreatsToStrengths,
-      clientele: defaultClientele,
-    };
-  }
+export async function getSiteData(): Promise<SiteData> {
+  const defaults = {
+    hero: defaultHero,
+    about: defaultAbout,
+    services: defaultServices,
+    executions: defaultExecutions,
+    blogs: defaultBlogs,
+    testimonials: defaultTestimonials,
+    stats: defaultStats,
+    whatWeDo: defaultWhatWeDo,
+    swot: defaultSWOT,
+    threatsToStrengths: defaultThreatsToStrengths,
+    clientele: defaultClientele,
+  };
 
-  // Version check: reset stale data when defaults change (e.g. image paths fixed)
-  const storedVersion = localStorage.getItem(VERSION_KEY);
-  if (storedVersion !== DATA_VERSION) {
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.setItem(VERSION_KEY, DATA_VERSION);
-  }
+  try {
+    const { data, error } = await supabase
+      .from('site_settings')
+      .select('data')
+      .eq('id', 1)
+      .single();
 
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored);
-      // Migration: add hero/about if missing from older data
+    if (data && data.data) {
+      const parsed = data.data;
       return {
         hero: parsed.hero || defaultHero,
         about: parsed.about || defaultAbout,
@@ -400,30 +428,31 @@ export function getSiteData(): SiteData {
         threatsToStrengths: parsed.threatsToStrengths || defaultThreatsToStrengths,
         clientele: parsed.clientele || defaultClientele,
       };
-    } catch {
-      // fall through
     }
+  } catch (err) {
+    console.error('Error fetching from supabase:', err);
   }
-  const defaults: SiteData = {
-    hero: defaultHero,
-    about: defaultAbout,
-    services: defaultServices,
-    executions: defaultExecutions,
-    blogs: defaultBlogs,
-    testimonials: defaultTestimonials,
-    stats: defaultStats,
-    whatWeDo: defaultWhatWeDo,
-    swot: defaultSWOT,
-    threatsToStrengths: defaultThreatsToStrengths,
-    clientele: defaultClientele,
-  };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(defaults));
-  return defaults;
+
+  return defaults as SiteData;
 }
 
-export function saveSiteData(data: SiteData): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+export async function saveSiteData(data: SiteData): Promise<void> {
+  const passcode = getPasscode();
+  try {
+    const res = await fetch('/api/admin/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ passcode, data })
+    });
+    const result = await res.json();
+    if (!result.success) {
+      console.error('Save failed:', result.error);
+      alert('Failed to save data: ' + result.error);
+    }
+  } catch (err) {
+    console.error('Error saving:', err);
+    alert('Error saving data. Check console.');
+  }
 }
 
 export function getPasscode(): string {

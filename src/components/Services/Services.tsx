@@ -15,7 +15,7 @@ export default function Services() {
 
   useEffect(() => {
     setMounted(true);
-    setServices(getSiteData().services);
+    getSiteData().then(data => setServices(data.services));
   }, []);
 
   const handleContact = (e: React.MouseEvent) => {

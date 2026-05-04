@@ -18,7 +18,7 @@ export default function Portfolio() {
 
   useEffect(() => {
     setMounted(true);
-    setExecutions(getSiteData().executions);
+    getSiteData().then(data => setExecutions(data.executions));
   }, []);
 
   const filtered = activeCategory === "All"

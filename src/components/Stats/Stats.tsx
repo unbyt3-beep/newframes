@@ -24,7 +24,7 @@ export default function Stats() {
   const sectionRef = useScrollReveal(0.2);
 
   useEffect(() => {
-    setStats(getSiteData().stats);
+    getSiteData().then(data => setStats(data.stats));
   }, []);
 
   return (

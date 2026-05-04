@@ -20,7 +20,7 @@ export default function WhatWeDo() {
 
   useEffect(() => {
     setMounted(true);
-    setData(getSiteData().whatWeDo);
+    getSiteData().then(siteData => setData(siteData.whatWeDo));
   }, []);
 
   useEffect(() => {

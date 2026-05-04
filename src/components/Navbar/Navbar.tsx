@@ -61,7 +61,7 @@ export default function Navbar() {
   );
 
   return (
-    <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ""}`}>
+    <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ""} ${menuOpen ? styles.menuIsOpen : ""}`}>
       <div className={styles.inner}>
         <a href="#hero" className={styles.logo} onClick={(e) => handleNavClick(e, "#hero")}>
           <Image

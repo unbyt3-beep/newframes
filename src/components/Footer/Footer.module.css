@@ -26,7 +26,7 @@
   width: 180px;
   height: 180px;
   flex-shrink: 0;
-  filter: brightness(10);
+  filter: brightness(0) saturate(100%) invert(47%) sepia(63%) saturate(2618%) hue-rotate(345deg) brightness(96%) contrast(89%);
 }
 
 .logoName {

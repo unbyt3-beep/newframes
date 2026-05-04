@@ -12,7 +12,7 @@ export default function Testimonials() {
   const contentRef = useScrollReveal(0.1);
 
   useEffect(() => {
-    setTestimonials(getSiteData().testimonials);
+    getSiteData().then(data => setTestimonials(data.testimonials));
   }, []);
 
   useEffect(() => {

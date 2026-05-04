@@ -18,7 +18,7 @@ import {
 } from "@/data/siteData";
 import styles from "./AdminPanel.module.css";
 
-type Tab = "hero" | "about" | "stats" | "services" | "executions" | "blogs" | "settings";
+type Tab = "hero" | "about" | "stats" | "services" | "executions" | "blogs" | "clientele" | "settings";
 
 export default function AdminPanel() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -33,19 +33,30 @@ export default function AdminPanel() {
   useEffect(() => {
     if (isAdminAuthenticated()) {
       setAuthenticated(true);
-      setData(getSiteData());
+      getSiteData().then(setData);
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcodeInput === getPasscode()) {
-      setAdminAuth(true);
-      setAuthenticated(true);
-      setData(getSiteData());
-      setError("");
-    } else {
-      setError("Incorrect passcode. Please try again.");
+    try {
+      const res = await fetch('/api/admin/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ passcode: passcodeInput })
+      });
+      const result = await res.json();
+      if (result.success) {
+        setPasscode(passcodeInput);
+        setAdminAuth(true);
+        setAuthenticated(true);
+        getSiteData().then(setData);
+        setError("");
+      } else {
+        setError("Incorrect passcode. Please try again.");
+      }
+    } catch (err) {
+      setError("Server error. Please try again later.");
     }
   };
 
@@ -55,9 +66,9 @@ export default function AdminPanel() {
     setData(null);
   };
 
-  const save = (newData: SiteData) => {
+  const save = async (newData: SiteData) => {
     setData(newData);
-    saveSiteData(newData);
+    await saveSiteData(newData);
   };
 
   const handlePasscodeChange = () => {
@@ -171,6 +182,24 @@ export default function AdminPanel() {
     save({ ...data, blogs: data.blogs.filter((b) => b.id !== id) });
   };
 
+  // ── Clientele CRUD ──
+  const addClient = () => {
+    if (!data) return;
+    save({ ...data, clientele: [...data.clientele, { name: "New Client", logo: "" }] });
+  };
+
+  const updateClient = (index: number, updates: Partial<{ name: string; logo: string }>) => {
+    if (!data) return;
+    const newClientele = [...data.clientele];
+    newClientele[index] = { ...newClientele[index], ...updates };
+    save({ ...data, clientele: newClientele });
+  };
+
+  const deleteClient = (index: number) => {
+    if (!data) return;
+    save({ ...data, clientele: data.clientele.filter((_, i) => i !== index) });
+  };
+
   // ── Passcode Gate ──
   if (!authenticated) {
     return (
@@ -217,7 +246,7 @@ export default function AdminPanel() {
             { key: "services", label: "Services", icon: "◇" },
             { key: "executions", label: "Executions", icon: "◆" },
             { key: "blogs", label: "Blog Posts", icon: "◈" },
-            { key: "settings", label: "Settings", icon: "⚙" },
+            { key: "clientele", label: "Clientele", icon: "🤝" },
           ] as { key: Tab; label: string; icon: string }[]).map((tab) => (
             <button
               key={tab.key}
@@ -245,13 +274,14 @@ export default function AdminPanel() {
             {activeTab === "services" && "Manage Services"}
             {activeTab === "executions" && "Manage Executions"}
             {activeTab === "blogs" && "Manage Blog Posts"}
-            {activeTab === "settings" && "Settings"}
+            {activeTab === "clientele" && "Manage Clientele"}
           </h1>
-          {(activeTab === "services" || activeTab === "executions" || activeTab === "blogs") && (
+          {(activeTab === "services" || activeTab === "executions" || activeTab === "blogs" || activeTab === "clientele") && (
             <button className={styles.addBtn} onClick={() => {
               if (activeTab === "services") addService();
               if (activeTab === "executions") addExecution();
               if (activeTab === "blogs") addBlog();
+              if (activeTab === "clientele") addClient();
             }}>+ Add New</button>
           )}
         </div>
@@ -448,30 +478,33 @@ export default function AdminPanel() {
             </div>
           ))}
 
-          {/* ── Settings Tab ── */}
-          {activeTab === "settings" && (
-            <div className={styles.settingsPanel}>
-              <div className={styles.settingsSection}>
-                <h3 className={styles.settingsTitle}>Change Passcode</h3>
-                <p className={styles.settingsDesc}>Update your admin panel access passcode.</p>
-                <div className={styles.settingsRow}>
-                  <input type="password" value={newPasscode} onChange={(e) => setNewPasscode(e.target.value)} placeholder="New passcode (min 6 characters)" className={styles.settingsInput} />
-                  <button className={styles.settingsBtn} onClick={handlePasscodeChange}>Update</button>
+          {/* ── Clientele Tab ── */}
+          {activeTab === "clientele" && data?.clientele.map((client, index) => (
+            <div key={index} className={styles.itemCard}>
+              <div className={styles.editForm}>
+                <div className={styles.editGrid}>
+                  <div className={styles.editRow}>
+                    <label>Client Name</label>
+                    <input value={client.name} onChange={(e) => updateClient(index, { name: e.target.value })} />
+                  </div>
+                  <div className={styles.editRow}>
+                    <label>Logo PNG URL</label>
+                    <input value={client.logo} onChange={(e) => updateClient(index, { logo: e.target.value })} placeholder="/images/logos/client.png" />
+                  </div>
                 </div>
-                {passMsg && <p className={passMsg.includes("success") ? styles.successMsg : styles.errorMsg}>{passMsg}</p>}
-              </div>
-              <div className={styles.settingsSection}>
-                <h3 className={styles.settingsTitle}>Data Management</h3>
-                <p className={styles.settingsDesc}>Reset all content to default values. This cannot be undone.</p>
-                <button className={styles.dangerBtn} onClick={() => {
-                  if (window.confirm("Are you sure? This will reset all content to defaults.")) {
-                    localStorage.removeItem("fns_site_data");
-                    setData(getSiteData());
-                  }
-                }}>Reset All Data</button>
+                {client.logo && (
+                  <div className={styles.imagePreview}>
+                    <img src={client.logo} alt="Client logo preview" style={{ maxHeight: '100px', width: 'auto' }} />
+                  </div>
+                )}
+                <div style={{ marginTop: '1rem' }}>
+                  <button className={styles.deleteBtn} onClick={() => deleteClient(index)}>Delete Client</button>
+                </div>
               </div>
             </div>
-          )}
+          ))}
+
+
         </div>
       </main>
     </div>

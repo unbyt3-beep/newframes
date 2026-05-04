@@ -1,5 +1,6 @@
 "use client";
 
+import { supabase } from "@/lib/supabase";
 import { useState } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import styles from "./Contact.module.css";
@@ -11,18 +12,85 @@ export default function Contact() {
     company: "",
     message: "",
   });
-  const [submitted, setSubmitted] = useState(false);
+
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
   const headerRef = useScrollReveal();
   const formRef = useScrollReveal(0.1);
   const infoRef = useScrollReveal(0.1);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: "", email: "", company: "", message: "" });
-    }, 3000);
+
+    // 🔴 1. Required fields check FIRST
+    if (!formData.name || !formData.email || !formData.message) {
+      setErrorMsg("Please fill in all required fields.");
+      setStatus("error");
+      return;
+    }
+
+    // 🟡 2. Email validation SECOND
+    if (!validateEmail(formData.email)) {
+      setErrorMsg("Please enter a valid email address.");
+      setStatus("error");
+      return;
+    }
+
+    // 🟢 3. Only now start submission
+    setStatus("submitting");
+    setErrorMsg("");
+
+    try {
+      const payload = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+        site_version: "1.0.0",
+      };
+
+      console.log("Submitting:", payload);
+
+      // ✅ 1. Save to Supabase
+      const { error } = await supabase
+        .from("contacts")
+        .insert([payload]);
+
+      if (error) throw error;
+
+      // ✅ 2. Trigger email API
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Email failed");
+
+      // ✅ Success state
+      setStatus("success");
+      setFormData({
+        name: "",
+        email: "",
+        company: "",
+        message: "",
+      });
+
+    } catch (err) {
+      console.error("Submission error:", err);
+      setErrorMsg("Something went wrong. Please try again.");
+      setStatus("error");
+    }
+  };
+
+  const handleRetry = () => {
+    setStatus("idle");
+    setErrorMsg("");
   };
 
   return (
@@ -40,77 +108,123 @@ export default function Contact() {
         </div>
 
         <div className={styles.grid}>
-          {/* Contact form */}
+          {/* FORM */}
           <div ref={formRef}>
-          <form className={styles.form} onSubmit={handleSubmit}>
-            <div className={styles.formRow}>
-              <div className={styles.field}>
-                <label className={styles.fieldLabel}>Your Name</label>
-                <input
-                  type="text"
-                  className={styles.fieldInput}
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  required
-                  placeholder="John Doe"
-                />
-                <div className={styles.fieldLine} />
+            {status === "success" ? (
+              <div className={styles.successMessage}>
+                <div className={styles.successIcon}>✓</div>
+                <h3>Message Sent Successfully!</h3>
+                <p>Thank you for reaching out. Our team will get back to you shortly.</p>
+                <button
+                  className={`btn-primary ${styles.retryBtn}`}
+                  onClick={() => setStatus("idle")}
+                >
+                  Send Another Message
+                </button>
               </div>
-              <div className={styles.field}>
-                <label className={styles.fieldLabel}>Email Address</label>
-                <input
-                  type="email"
-                  className={styles.fieldInput}
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  required
-                  placeholder="john@company.com"
-                />
-                <div className={styles.fieldLine} />
-              </div>
-            </div>
-            <div className={styles.field}>
-              <label className={styles.fieldLabel}>Company</label>
-              <input
-                type="text"
-                className={styles.fieldInput}
-                value={formData.company}
-                onChange={(e) =>
-                  setFormData({ ...formData, company: e.target.value })
-                }
-                placeholder="Your Company"
-              />
-              <div className={styles.fieldLine} />
-            </div>
-            <div className={styles.field}>
-              <label className={styles.fieldLabel}>Message</label>
-              <textarea
-                className={`${styles.fieldInput} ${styles.fieldTextarea}`}
-                value={formData.message}
-                onChange={(e) =>
-                  setFormData({ ...formData, message: e.target.value })
-                }
-                required
-                placeholder="Tell us about your project..."
-                rows={4}
-              />
-              <div className={styles.fieldLine} />
-            </div>
-            <button
-              type="submit"
-              className={`btn-primary ${styles.submitBtn}`}
-              disabled={submitted}
-            >
-              <span>{submitted ? "Message Sent ✓" : "Send Message"}</span>
-            </button>
-          </form>
+            ) : (
+              <form className={styles.form} onSubmit={handleSubmit}>
+                <div className={styles.formRow}>
+                  <div className={styles.field}>
+                    <label htmlFor="name" className={styles.fieldLabel}>Your Name</label>
+                    <input
+                      id="name"
+                      type="text"
+                      className={styles.fieldInput}
+                      value={formData.name}
+                      onChange={(e) => {
+                        setFormData({ ...formData, name: e.target.value });
+                        setErrorMsg("");
+                      }}
+                      required
+                      disabled={status === "submitting"}
+                      placeholder="John Doe"
+                    />
+                    <div className={styles.fieldLine} />
+                  </div>
+
+                  <div className={styles.field}>
+                    <label htmlFor="email" className={styles.fieldLabel}>Email Address</label>
+                    <input
+                      id="email"
+                      type="email"
+                      className={styles.fieldInput}
+                      value={formData.email}
+                      onChange={(e) => {
+                        setFormData({ ...formData, email: e.target.value });
+                        setErrorMsg("");
+                      }}
+                      required
+                      disabled={status === "submitting"}
+                      placeholder="john@company.com"
+                    />
+                    <div className={styles.fieldLine} />
+                  </div>
+                </div>
+
+                <div className={styles.field}>
+                  <label htmlFor="company" className={styles.fieldLabel}>Company (Optional)</label>
+                  <input
+                    id="company"
+                    type="text"
+                    className={styles.fieldInput}
+                    value={formData.company}
+                    onChange={(e) =>
+                      setFormData({ ...formData, company: e.target.value })
+                    }
+                    disabled={status === "submitting"}
+                    placeholder="Your Company"
+                  />
+                  <div className={styles.fieldLine} />
+                </div>
+
+                <div className={styles.field}>
+                  <label htmlFor="message" className={styles.fieldLabel}>Message</label>
+                  <textarea
+                    id="message"
+                    className={`${styles.fieldInput} ${styles.fieldTextarea}`}
+                    value={formData.message}
+                    onChange={(e) => {
+                      setFormData({ ...formData, message: e.target.value });
+                      setErrorMsg("");
+                    }}
+                    required
+                    disabled={status === "submitting"}
+                    placeholder="Tell us about your project..."
+                    rows={4}
+                  />
+                  <div className={styles.fieldLine} />
+                </div>
+
+                {status === "error" && (
+                  <div className={styles.errorMessage} role="alert">
+                    <span>{errorMsg}</span>
+                    <button
+                      type="button"
+                      onClick={handleRetry}
+                      className={styles.inlineRetry}
+                    >
+                      Retry
+                    </button>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className={`btn-primary ${styles.submitBtn} ${status === "submitting" ? styles.btnLoading : ""
+                    }`}
+                  disabled={status === "submitting"}
+                >
+                  <span className={styles.btnText}>
+                    {status === "submitting" ? "Sending..." : "Send Message"}
+                  </span>
+                  {status === "submitting" && <div className={styles.loader} />}
+                </button>
+              </form>
+            )}
           </div>
 
-          {/* Contact info */}
+          {/* INFO */}
           <div className={styles.info} ref={infoRef}>
             <div className={styles.infoCard}>
               <div className={styles.infoIcon}>📍</div>
@@ -123,6 +237,7 @@ export default function Contact() {
                 </p>
               </div>
             </div>
+
             <div className={styles.infoCard}>
               <div className={styles.infoIcon}>✉️</div>
               <div>
@@ -132,6 +247,7 @@ export default function Contact() {
                 </a>
               </div>
             </div>
+
             <div className={styles.infoCard}>
               <div className={styles.infoIcon}>📞</div>
               <div>
@@ -141,6 +257,7 @@ export default function Contact() {
                 </a>
               </div>
             </div>
+
             <div className={styles.infoCard}>
               <div className={styles.infoIcon}>🕐</div>
               <div>

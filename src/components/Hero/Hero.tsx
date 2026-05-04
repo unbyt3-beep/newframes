@@ -22,54 +22,58 @@ export default function Hero() {
 
   useEffect(() => {
     setMounted(true);
-    const data = getSiteData().hero;
-    // Sanitize for stale localStorage
-    if (data.subtitle.toLowerCase().includes("premium")) {
-      data.subtitle = data.subtitle.replace(/premium/gi, "project management");
-    }
-    setHero(data);
+    getSiteData().then((siteData) => {
+      const data = siteData.hero;
+      // Sanitize for stale localStorage
+      if (data.subtitle.toLowerCase().includes("premium")) {
+        data.subtitle = data.subtitle.replace(/premium/gi, "project management");
+      }
+      setHero(data);
+    });
   }, []);
 
   useEffect(() => {
     if (!hero) return;
 
-    const tl = gsap.timeline({ delay: 0.3 });
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.3 });
 
-    if (labelRef.current) {
-      tl.fromTo(labelRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" });
-    }
-
-    if (titleRef.current) {
-      const words = titleRef.current.querySelectorAll(`.${styles.titleWord}`);
-      tl.fromTo(words, { opacity: 0, y: "110%", rotateX: -30 }, { opacity: 1, y: "0%", rotateX: 0, duration: 1.1, stagger: 0.1, ease: "power3.out" }, "-=0.4");
-    }
-
-    if (subtitleRef.current) {
-      tl.fromTo(subtitleRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.5");
-    }
-
-    if (actionsRef.current) {
-      tl.fromTo(actionsRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.4");
-    }
-
-    if (scrollRef.current) {
-      tl.fromTo(scrollRef.current, { opacity: 0 }, { opacity: 1, duration: 0.6 }, "-=0.2");
-    }
-
-    // Parallax on scroll
-    if (heroRef.current) {
-      const content = heroRef.current.querySelector(`.${styles.content}`);
-      if (content) {
-        gsap.to(content, {
-          y: -80,
-          opacity: 0.3,
-          ease: "none",
-          scrollTrigger: { trigger: heroRef.current, start: "top top", end: "bottom top", scrub: 1.2 },
-        });
+      if (labelRef.current) {
+        tl.fromTo(labelRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" });
       }
-    }
 
-    return () => { tl.kill(); };
+      if (titleRef.current) {
+        const words = titleRef.current.querySelectorAll(`.${styles.titleWord}`);
+        tl.fromTo(words, { opacity: 0, y: "110%", rotateX: -30 }, { opacity: 1, y: "0%", rotateX: 0, duration: 1.1, stagger: 0.1, ease: "power3.out" }, "-=0.4");
+      }
+
+      if (subtitleRef.current) {
+        tl.fromTo(subtitleRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.5");
+      }
+
+      if (actionsRef.current) {
+        tl.fromTo(actionsRef.current, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.4");
+      }
+
+      if (scrollRef.current) {
+        tl.fromTo(scrollRef.current, { opacity: 0 }, { opacity: 1, duration: 0.6 }, "-=0.2");
+      }
+
+      // Parallax on scroll
+      if (heroRef.current) {
+        const content = heroRef.current.querySelector(`.${styles.content}`);
+        if (content) {
+          gsap.to(content, {
+            y: -80,
+            opacity: 0.3,
+            ease: "none",
+            scrollTrigger: { trigger: heroRef.current, start: "top top", end: "bottom top", scrub: 1.2 },
+          });
+        }
+      }
+    });
+
+    return () => ctx.revert();
   }, [hero]);
 
   useEffect(() => {
@@ -106,7 +110,7 @@ export default function Hero() {
       <div className={styles.content}>
         <div className={styles.labelWrap} ref={labelRef}>
           <div className={styles.labelLine} />
-          <span className={styles.label}>Project Management & Advisory</span>
+          <span className={styles.label}>Project Management Advisory</span>
           <div className={styles.labelLine} />
         </div>
 

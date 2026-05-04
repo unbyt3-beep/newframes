@@ -12,7 +12,7 @@ export default function Blog() {
   const gridRef = useScrollReveal(0.1);
 
   useEffect(() => {
-    setBlogs(getSiteData().blogs);
+    getSiteData().then(data => setBlogs(data.blogs));
   }, []);
 
   const featured = blogs.find((b) => b.featured);

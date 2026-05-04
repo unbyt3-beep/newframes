@@ -17,29 +17,34 @@ export default function SWOTAnalysis() {
 
   useEffect(() => {
     setMounted(true);
-    setData(getSiteData().swot);
+    getSiteData().then(siteData => setData(siteData.swot));
   }, []);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || !data) return;
 
-    const cards = containerRef.current.querySelectorAll(`.${styles.swotCard}`);
-    
-    gsap.fromTo(
-      cards,
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 80%",
-        },
+    const ctx = gsap.context(() => {
+      const cards = containerRef.current?.querySelectorAll(`.${styles.swotCard}`);
+      if (cards && cards.length > 0) {
+        gsap.fromTo(
+          cards,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top 80%",
+            },
+          }
+        );
       }
-    );
+    });
+
+    return () => ctx.revert();
   }, [data]);
 
   if (!mounted || !data) return null;
@@ -63,8 +68,8 @@ export default function SWOTAnalysis() {
               <h3 className={styles.cardTitle}>Strengths</h3>
             </div>
             <ul className={styles.list}>
-              {data.strengths.map((item, i) => (
-                <li key={i} className={styles.listItem}>{item}</li>
+              {data.strengths.map((item: string, i: number) => (
+                <li key={`strength-${i}`} className={styles.listItem}>{item}</li>
               ))}
             </ul>
           </div>
@@ -76,8 +81,8 @@ export default function SWOTAnalysis() {
               <h3 className={styles.cardTitle}>Weaknesses</h3>
             </div>
             <ul className={styles.list}>
-              {data.weaknesses.map((item, i) => (
-                <li key={i} className={styles.listItem}>{item}</li>
+              {data.weaknesses.map((item: string, i: number) => (
+                <li key={`weakness-${i}`} className={styles.listItem}>{item}</li>
               ))}
             </ul>
           </div>
@@ -89,8 +94,8 @@ export default function SWOTAnalysis() {
               <h3 className={styles.cardTitle}>Opportunities</h3>
             </div>
             <ul className={styles.list}>
-              {data.opportunities.map((item, i) => (
-                <li key={i} className={styles.listItem}>{item}</li>
+              {data.opportunities.map((item: string, i: number) => (
+                <li key={`opportunity-${i}`} className={styles.listItem}>{item}</li>
               ))}
             </ul>
           </div>
@@ -102,8 +107,8 @@ export default function SWOTAnalysis() {
               <h3 className={styles.cardTitle}>Threats</h3>
             </div>
             <ul className={styles.list}>
-              {data.threats.map((item, i) => (
-                <li key={i} className={styles.listItem}>{item}</li>
+              {data.threats.map((item: string, i: number) => (
+                <li key={`threat-${i}`} className={styles.listItem}>{item}</li>
               ))}
             </ul>
           </div>

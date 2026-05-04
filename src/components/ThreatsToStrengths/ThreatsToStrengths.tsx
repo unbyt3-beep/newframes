@@ -13,29 +13,34 @@ export default function ThreatsToStrengths() {
 
   useEffect(() => {
     setMounted(true);
-    setData(getSiteData().threatsToStrengths);
+    getSiteData().then(siteData => setData(siteData.threatsToStrengths));
   }, []);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || data.length === 0) return;
 
-    const items = containerRef.current.querySelectorAll(`.${styles.item}`);
-    
-    gsap.fromTo(
-      items,
-      { opacity: 0, x: -30 },
-      {
-        opacity: 1,
-        x: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 80%",
-        },
+    const ctx = gsap.context(() => {
+      const items = containerRef.current?.querySelectorAll(`.${styles.item}`);
+      if (items && items.length > 0) {
+        gsap.fromTo(
+          items,
+          { opacity: 0, x: -30 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top 80%",
+            },
+          }
+        );
       }
-    );
+    });
+
+    return () => ctx.revert();
   }, [data]);
 
   if (!mounted || data.length === 0) return null;
