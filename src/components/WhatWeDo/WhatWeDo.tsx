@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getSiteData } from "@/data/siteData";
 import styles from "./WhatWeDo.module.css";
 import Image from "next/image";
+import { fixImageUrl } from "@/utils/imageUtils";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -24,53 +25,53 @@ export default function WhatWeDo() {
   }, []);
 
   useEffect(() => {
-    if (!sectionRef.current || !containerRef.current) return;
+    if (!sectionRef.current || !containerRef.current || data.length === 0) return;
 
-    const cards = cardsRef.current.filter((c) => c !== null);
-    
-    // Clear initial states
-    cards.forEach((card, i) => {
-      if (i === 0) {
-        gsap.set(card, { zIndex: 10, y: 0, opacity: 1, scale: 1 });
-      } else {
-        gsap.set(card, { zIndex: 10 + i, y: "100%", opacity: 0, scale: 1 });
-      }
-    });
-
-    const mainTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top top",
-        end: () => `+=${cards.length * 800}`,
-        pin: true,
-        scrub: 1,
-      }
-    });
-
-    cards.forEach((card, index) => {
-      if (index === 0) return;
-
-      // Animate current card coming in
-      mainTl.to(card, {
-        y: 0,
-        opacity: 1,
-        duration: 2,
-        ease: "none"
+    const ctx = gsap.context(() => {
+      const cards = cardsRef.current.filter((c) => c !== null);
+      
+      // Clear initial states
+      cards.forEach((card, i) => {
+        if (i === 0) {
+          gsap.set(card, { zIndex: 10, y: 0, opacity: 1, scale: 1 });
+        } else {
+          gsap.set(card, { zIndex: 10 + i, y: "100%", opacity: 0, scale: 1 });
+        }
       });
 
-      // Subtle scale back for the card being covered
-      mainTl.to(cards[index - 1], {
-        scale: 0.95,
-        opacity: 0.3,
-        duration: 2,
-        ease: "none"
-      }, "<"); // Start at the same time as the current card coming in
-    });
+      const mainTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: () => `+=${cards.length * 800}`,
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
+        }
+      });
 
-    return () => {
-      mainTl.kill();
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
+      cards.forEach((card, index) => {
+        if (index === 0) return;
+
+        // Animate current card coming in
+        mainTl.to(card, {
+          y: 0,
+          opacity: 1,
+          duration: 2,
+          ease: "none"
+        });
+
+        // Subtle scale back for the card being covered
+        mainTl.to(cards[index - 1], {
+          scale: 0.95,
+          opacity: 0.3,
+          duration: 2,
+          ease: "none"
+        }, "<"); 
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, [data]);
 
   if (!mounted || data.length === 0) return null;
@@ -100,7 +101,7 @@ export default function WhatWeDo() {
                 <div className={styles.imageSide}>
                   <div className={styles.imageWrap}>
                     <Image
-                      src={item.imageUrl}
+                      src={fixImageUrl(item.imageUrl)}
                       alt={item.title}
                       width={600}
                       height={400}

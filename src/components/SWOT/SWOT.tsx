@@ -23,26 +23,25 @@ export default function SWOTAnalysis() {
   useEffect(() => {
     if (!containerRef.current || !data) return;
 
-    const ctx = gsap.context(() => {
-      const cards = containerRef.current?.querySelectorAll(`.${styles.swotCard}`);
-      if (cards && cards.length > 0) {
-        gsap.fromTo(
-          cards,
-          { opacity: 0, y: 50 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-            },
-          }
-        );
-      }
-    });
+    const ctx = gsap.context((self) => {
+      const q = self.selector;
+      gsap.fromTo(
+        q(`.${styles.swotCard}`),
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none"
+          },
+        }
+      );
+    }, containerRef);
 
     return () => ctx.revert();
   }, [data]);

@@ -20,26 +20,26 @@ export function useScrollReveal(threshold = 0.15) {
     const el = ref.current;
     if (!el) return;
 
-    // Set initial state
-    gsap.set(el, { opacity: 0, y: 70 });
+    const ctx = gsap.context(() => {
+      // Set initial state
+      gsap.set(el, { opacity: 0, y: 70 });
 
-    const trigger = ScrollTrigger.create({
-      trigger: el,
-      start: "top 88%",
-      once: true,
-      onEnter: () => {
-        gsap.to(el, {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          ease: "power3.out",
-        });
-      },
+      ScrollTrigger.create({
+        trigger: el,
+        start: "top 88%",
+        once: true,
+        onEnter: () => {
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            ease: "power3.out",
+          });
+        },
+      });
     });
 
-    return () => {
-      trigger.kill();
-    };
+    return () => ctx.revert();
   }, [threshold]);
 
   return ref;
@@ -176,16 +176,16 @@ export function useCountUp(target: number, duration = 2.5) {
     const el = ref.current;
     if (!el) return;
 
-    const trigger = ScrollTrigger.create({
-      trigger: el,
-      start: "top 90%",
-      once: true,
-      onEnter: animate,
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: el,
+        start: "top 90%",
+        once: true,
+        onEnter: animate,
+      });
     });
 
-    return () => {
-      trigger.kill();
-    };
+    return () => ctx.revert();
   }, [animate]);
 
   return ref;

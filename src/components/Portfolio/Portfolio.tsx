@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { getSiteData, type Execution } from "@/data/siteData";
 import styles from "./Portfolio.module.css";
+import { fixImageUrl } from "@/utils/imageUtils";
 
 const CATEGORIES = ["All", "Corporate Office", "IT Campus", "Financial Office", "Innovation Center", "Co-Working", "Executive Suite"];
 
@@ -64,7 +65,7 @@ export default function Portfolio() {
             >
               <div className={styles.cardImage}>
                 <Image
-                  src={exec.imageUrl}
+                  src={fixImageUrl(exec.imageUrl)}
                   alt={exec.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"

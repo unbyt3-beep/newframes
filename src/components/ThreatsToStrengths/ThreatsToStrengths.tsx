@@ -19,26 +19,25 @@ export default function ThreatsToStrengths() {
   useEffect(() => {
     if (!containerRef.current || data.length === 0) return;
 
-    const ctx = gsap.context(() => {
-      const items = containerRef.current?.querySelectorAll(`.${styles.item}`);
-      if (items && items.length > 0) {
-        gsap.fromTo(
-          items,
-          { opacity: 0, x: -30 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-            },
-          }
-        );
-      }
-    });
+    const ctx = gsap.context((self) => {
+      const q = self.selector;
+      gsap.fromTo(
+        q(`.${styles.item}`),
+        { opacity: 0, x: -30 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none"
+          },
+        }
+      );
+    }, containerRef);
 
     return () => ctx.revert();
   }, [data]);

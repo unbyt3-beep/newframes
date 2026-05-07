@@ -125,7 +125,7 @@ export const defaultWhatWeDo: WhatWeDoItem[] = [
   {
     id: "wwd1",
     title: "SMART PLANNING",
-    description: "Comprehensive spatial analysis and strategic programming that anticipates future growth while maximizing current efficiency. We use data-driven insights to create layouts that evolve with your business.",
+    description: "Comprehensive spatial analysis and AI-driven strategic programming. We use advanced AI tools to optimize project scheduling, ensuring faster turnaround times and more accurate resource allocation.",
     imageUrl: "/images/exec1.png",
   },
   {
@@ -218,10 +218,10 @@ export const defaultServices: Service[] = [
   {
     id: "s1",
     title: "Strategic Advisory",
-    subtitle: "Workspace Intelligence",
-    description: "Expert consultancy for planning and optimizing high-performance workspaces. We provide strategic guidance on space utilization, workflow design, and environment psychology to maximize productivity and employee well-being.",
+    subtitle: "Consultancy and Advisory",
+    description: "Expert consultancy and advisory for planning and optimizing high-performance workspaces. We provide strategic guidance on space utilization, workflow design, and environment psychology to maximize productivity.",
     icon: "◈",
-    features: ["Workspace Strategy & Planning", "Feasibility Studies & Analysis", "Budget Advisory & Cost Optimization", "Compliance & Regulatory Guidance"],
+    features: ["Workspace Strategy & Planning", "Consultancy and Advisory Services", "Budget Advisory & Cost Optimization", "Compliance & Regulatory Guidance"],
     imageUrl: "/images/exec1.png",
   },
   {
@@ -410,7 +410,8 @@ export async function getSiteData(): Promise<SiteData> {
     const { data, error } = await supabase
       .from('site_settings')
       .select('data')
-      .eq('id', 1)
+      .order('id', { ascending: false })
+      .limit(1)
       .single();
 
     if (data && data.data) {
@@ -436,7 +437,7 @@ export async function getSiteData(): Promise<SiteData> {
   return defaults as SiteData;
 }
 
-export async function saveSiteData(data: SiteData): Promise<void> {
+export async function saveSiteData(data: SiteData): Promise<{ success: boolean; error?: string }> {
   const passcode = getPasscode();
   try {
     const res = await fetch('/api/admin/save', {
@@ -445,13 +446,10 @@ export async function saveSiteData(data: SiteData): Promise<void> {
       body: JSON.stringify({ passcode, data })
     });
     const result = await res.json();
-    if (!result.success) {
-      console.error('Save failed:', result.error);
-      alert('Failed to save data: ' + result.error);
-    }
+    return result;
   } catch (err) {
     console.error('Error saving:', err);
-    alert('Error saving data. Check console.');
+    return { success: false, error: 'Network error' };
   }
 }
 

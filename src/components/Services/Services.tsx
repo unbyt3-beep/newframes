@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { getSiteData, type Service } from "@/data/siteData";
 import styles from "./Services.module.css";
+import { fixImageUrl } from "@/utils/imageUtils";
 
 export default function Services() {
   const [services, setServices] = useState<Service[]>([]);
@@ -35,7 +36,7 @@ export default function Services() {
           </h2>
           <p className="body-lg" style={{ maxWidth: "600px" }}>
             From space planning to technical advisory,
-            we provide end-to-end consultancy for modern work environments.
+            we provide end-to-end consultancy and advisory services for modern work environments.
           </p>
         </div>
 
@@ -63,7 +64,7 @@ export default function Services() {
               {/* Service image */}
               <div className={styles.detailImageWrap}>
                 <Image
-                  src={services[activeIdx].imageUrl}
+                  src={fixImageUrl(services[activeIdx].imageUrl)}
                   alt={services[activeIdx].title}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"

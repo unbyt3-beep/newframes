@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { getSiteData, type BlogPost } from "@/data/siteData";
 import styles from "./Blog.module.css";
+import { fixImageUrl } from "@/utils/imageUtils";
 
 export default function Blog() {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -32,7 +33,13 @@ export default function Blog() {
           {featured && (
             <article className={styles.featured}>
               <div className={styles.featuredImage}>
-                <Image src={featured.imageUrl} alt={featured.title} fill sizes="(max-width: 768px) 100vw, 60vw" className={styles.featuredImg} />
+                <Image 
+                  src={fixImageUrl(featured.imageUrl)} 
+                  alt={featured.title} 
+                  fill 
+                  sizes="(max-width: 768px) 100vw, 60vw" 
+                  className={styles.featuredImg} 
+                />
                 <div className={styles.featuredOverlay} />
                 <div className={styles.featuredBadge}>{featured.category}</div>
               </div>
@@ -49,7 +56,13 @@ export default function Blog() {
             {others.map((post) => (
               <article key={post.id} className={styles.sidePost}>
                 <div className={styles.sideImageWrap}>
-                  <Image src={post.imageUrl} alt={post.title} fill sizes="100px" className={styles.sideImg} />
+                  <Image 
+                    src={fixImageUrl(post.imageUrl)} 
+                    alt={post.title} 
+                    fill 
+                    sizes="100px" 
+                    className={styles.sideImg} 
+                  />
                 </div>
                 <div className={styles.sideContent}>
                   <div className={styles.sideMeta}>

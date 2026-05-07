@@ -19,9 +19,21 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: false, error: 'Please set your SUPABASE_SERVICE_ROLE_KEY in .env.local first.' }, { status: 500 });
     }
     
+    // Since the table doesn't have auto-increment, we fetch the max ID manually
+    const { data: rows } = await supabaseAdmin
+      .from('site_settings')
+      .select('id')
+      .order('id', { ascending: false })
+      .limit(1);
+
+    const newId = (rows && rows.length > 0 ? rows[0].id : 0) + 1;
+
     const { error } = await supabaseAdmin
       .from('site_settings')
-      .upsert({ id: 1, data });
+      .insert({ 
+        id: newId,
+        data 
+      });
       
     if (error) {
       console.error('Supabase save error:', error);

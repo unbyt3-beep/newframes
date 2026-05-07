@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getSiteData, type HeroData } from "@/data/siteData";
 import styles from "./Hero.module.css";
+import { fixImageUrl } from "@/utils/imageUtils";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -103,7 +104,7 @@ export default function Hero() {
       {/* Background image */}
       <div
         className={styles.bgImage}
-        style={{ backgroundImage: `url(${hero.imageUrl})` }}
+        style={{ backgroundImage: `url(${fixImageUrl(hero.imageUrl)})` }}
       />
       <div className={styles.bgOverlay} />
 
