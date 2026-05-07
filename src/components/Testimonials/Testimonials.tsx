@@ -42,7 +42,7 @@ export default function Testimonials() {
               {current.text}
             </blockquote>
             <div className={styles.stars}>
-              {Array.from({ length: current.rating }).map((_, i) => (
+              {Array.from({ length: current.rating }).map((_: any, i: number) => (
                 <span key={i} className={styles.star}>★</span>
               ))}
             </div>
@@ -58,7 +58,7 @@ export default function Testimonials() {
 
             {/* Navigation dots */}
             <div className={styles.dots}>
-              {testimonials.map((_, i) => (
+              {testimonials.map((_: any, i: number) => (
                 <button
                   key={i}
                   className={`${styles.dot} ${i === active ? styles.dotActive : ""}`}

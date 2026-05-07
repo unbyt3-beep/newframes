@@ -186,7 +186,7 @@ export default function About() {
           <div className={styles.strategyBlock}>
             <h3 className={styles.strategyTitle}>OUR MISSION</h3>
             <div className={styles.missionGrid} ref={missionRef}>
-              {missionPoints.map((point, index) => (
+              {missionPoints.map((point: string, index: number) => (
                 <div key={`mission-${index}`} className={`${styles.missionCard} mission-card`}>
                   <div className={styles.missionIcon}>◈</div>
                   <p className={styles.missionText}>{point}</p>
@@ -198,7 +198,7 @@ export default function About() {
           <div className={styles.strategyBlock}>
             <h3 className={styles.strategyTitle}>OUR VISION</h3>
             <div className={styles.visionGrid} ref={visionRef}>
-              {visionPoints.map((point, index) => (
+              {visionPoints.map((point: string, index: number) => (
                 <div key={`vision-${index}`} className={`${styles.visionCard} vision-card`}>
                   <div className={styles.visionIcon}>✦</div>
                   <p className={styles.visionText}>{point}</p>

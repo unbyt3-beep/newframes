@@ -85,7 +85,7 @@ export default function WhatWeDo() {
         </div>
         
         <div ref={containerRef} className={styles.cardsContainer}>
-          {data.map((item, index) => (
+          {data.map((item: any, index: number) => (
             <div
               key={item.id}
               ref={(el) => { cardsRef.current[index] = el; }}

@@ -32,6 +32,8 @@ export default function AdminPanel() {
   const [passMsg, setPassMsg] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
+  const [newPasscode, setNewPasscode] = useState("");
+
 
   const hasChanges = JSON.stringify(data) !== JSON.stringify(localData);
 
@@ -242,7 +244,7 @@ export default function AdminPanel() {
     if (!localData) return;
     setLocalData({ 
       ...localData, 
-      whatWeDo: localData.whatWeDo.map((w) => (w.id === id ? { ...w, ...updates } : w)) 
+      whatWeDo: localData.whatWeDo.map((w: any) => (w.id === id ? { ...w, ...updates } : w)) 
     });
   };
 
@@ -259,7 +261,7 @@ export default function AdminPanel() {
     if (!localData) return;
     setLocalData({ 
       ...localData, 
-      stats: localData.stats.map((s) => (s.id === id ? { ...s, ...updates } : s)) 
+      stats: localData.stats.map((s: any) => (s.id === id ? { ...s, ...updates } : s)) 
     });
   };
 
@@ -283,7 +285,7 @@ export default function AdminPanel() {
     if (!localData) return;
     setLocalData({ 
       ...localData, 
-      services: localData.services.map((s) => (s.id === id ? { ...s, ...updates } : s)) 
+      services: localData.services.map((s: any) => (s.id === id ? { ...s, ...updates } : s)) 
     });
   };
 
@@ -317,7 +319,7 @@ export default function AdminPanel() {
     if (!localData) return;
     setLocalData({ 
       ...localData, 
-      executions: localData.executions.map((e) => (e.id === id ? { ...e, ...updates } : e)) 
+      executions: localData.executions.map((e: any) => (e.id === id ? { ...e, ...updates } : e)) 
     });
   };
 
@@ -351,7 +353,7 @@ export default function AdminPanel() {
     if (!localData) return;
     setLocalData({ 
       ...localData, 
-      blogs: localData.blogs.map((b) => (b.id === id ? { ...b, ...updates } : b)) 
+      blogs: localData.blogs.map((b: any) => (b.id === id ? { ...b, ...updates } : b)) 
     });
   };
 
@@ -551,7 +553,7 @@ export default function AdminPanel() {
           )}
 
           {/* ── What We Do Tab ── */}
-          {activeTab === "whatWeDo" && localData?.whatWeDo.map((item) => (
+          {activeTab === "whatWeDo" && localData?.whatWeDo.map((item: any) => (
             <div key={item.id} className={`${styles.itemCard} ${editingItem === item.id ? styles.itemCardEditing : ""}`}>
               {editingItem === item.id ? (
                 <div className={styles.editForm}>
@@ -598,7 +600,7 @@ export default function AdminPanel() {
             <div className={styles.settingsPanel}>
               <div className={styles.settingsSection}>
                 <h3 className={styles.settingsTitle}>Company Statistics</h3>
-                {localData.stats.map((stat) => (
+                {localData.stats.map((stat: any) => (
                   <div key={stat.id} className={styles.statEditCard}>
                     <div className={styles.editRow}>
                       <label>Label</label>
@@ -619,7 +621,7 @@ export default function AdminPanel() {
           )}
 
           {/* ── Services Tab ── */}
-          {activeTab === "services" && localData?.services.map((svc) => (
+          {activeTab === "services" && localData?.services.map((svc: any) => (
             <div key={svc.id} className={`${styles.itemCard} ${editingItem === svc.id ? styles.itemCardEditing : ""}`}>
               {editingItem === svc.id ? (
                 <div className={styles.editForm}>
@@ -655,7 +657,7 @@ export default function AdminPanel() {
           ))}
 
           {/* ── Executions Tab ── */}
-          {activeTab === "executions" && localData?.executions.map((exec) => (
+          {activeTab === "executions" && localData?.executions.map((exec: any) => (
             <div key={exec.id} className={`${styles.itemCard} ${editingItem === exec.id ? styles.itemCardEditing : ""}`}>
               {editingItem === exec.id ? (
                 <div className={styles.editForm}>
@@ -693,7 +695,7 @@ export default function AdminPanel() {
           ))}
 
           {/* ── Blogs Tab ── */}
-          {activeTab === "blogs" && localData?.blogs.map((blog) => (
+          {activeTab === "blogs" && localData?.blogs.map((blog: any) => (
             <div key={blog.id} className={`${styles.itemCard} ${editingItem === blog.id ? styles.itemCardEditing : ""}`}>
               {editingItem === blog.id ? (
                 <div className={styles.editForm}>
@@ -732,7 +734,7 @@ export default function AdminPanel() {
           ))}
 
           {/* ── Clientele Tab ── */}
-          {activeTab === "clientele" && localData?.clientele.map((client, index) => (
+          {activeTab === "clientele" && localData?.clientele.map((client: any, index: number) => (
             <div key={index} className={styles.itemCard}>
               <div className={styles.editForm}>
                 <div className={styles.editGrid}>

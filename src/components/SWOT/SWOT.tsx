@@ -24,7 +24,7 @@ export default function SWOTAnalysis() {
     if (!containerRef.current || !data) return;
 
     const ctx = gsap.context((self) => {
-      const q = self.selector;
+      const q = self.selector!;
       gsap.fromTo(
         q(`.${styles.swotCard}`),
         { opacity: 0, y: 50 },

@@ -53,7 +53,7 @@ export default function Blog() {
           )}
 
           <div className={styles.sideList}>
-            {others.map((post) => (
+            {others.map((post: any) => (
               <article key={post.id} className={styles.sidePost}>
                 <div className={styles.sideImageWrap}>
                   <Image 

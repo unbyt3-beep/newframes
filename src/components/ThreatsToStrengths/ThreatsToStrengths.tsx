@@ -20,7 +20,7 @@ export default function ThreatsToStrengths() {
     if (!containerRef.current || data.length === 0) return;
 
     const ctx = gsap.context((self) => {
-      const q = self.selector;
+      const q = self.selector!;
       gsap.fromTo(
         q(`.${styles.item}`),
         { opacity: 0, x: -30 },
@@ -60,7 +60,7 @@ export default function ThreatsToStrengths() {
           </div>
           
           <div ref={containerRef} className={styles.right}>
-            {data.map((item, index) => (
+            {data.map((item: any, index: number) => (
               <div 
                 key={item.id} 
                 className={`${styles.item} ${selectedId === item.id ? styles.itemSelected : ""}`}

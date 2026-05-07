@@ -42,7 +42,7 @@ export default function Services() {
 
         <div className={styles.display} ref={cardsRef}>
           <div className={styles.serviceList}>
-            {services.map((svc, i) => (
+            {services.map((svc: any, i: number) => (
               <button
                 key={svc.id}
                 className={`${styles.serviceItem} ${i === activeIdx ? styles.serviceItemActive : ""}`}
@@ -79,7 +79,7 @@ export default function Services() {
                 <h3 className={styles.detailTitle}>{services[activeIdx].title}</h3>
                 <p className={styles.detailDesc}>{services[activeIdx].description}</p>
                 <ul className={styles.featureList}>
-                  {services[activeIdx].features.map((f, i) => (
+                  {services[activeIdx].features.map((f: string, i: number) => (
                     <li key={i} className={styles.featureItem}>
                       <span className={styles.featureCheck}>✓</span>{f}
                     </li>

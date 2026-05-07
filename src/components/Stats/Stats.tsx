@@ -35,7 +35,7 @@ export default function Stats() {
           <span className="label">[ 07 ] — Market Impact</span>
         </div>
         <div className={styles.grid}>
-          {stats.map((stat) => (
+          {stats.map((stat: any) => (
             <StatItem key={stat.id} stat={stat} />
           ))}
         </div>

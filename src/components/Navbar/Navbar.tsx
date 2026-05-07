@@ -28,7 +28,7 @@ export default function Navbar() {
 
   // Track active section
   useEffect(() => {
-    const sections = NAV_LINKS.map((l) => l.href.replace("#", ""));
+    const sections = NAV_LINKS.map((l: any) => l.href.replace("#", ""));
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -78,7 +78,7 @@ export default function Navbar() {
         </a>
 
         <div className={`${styles.links} ${menuOpen ? styles.open : ""}`}>
-          {NAV_LINKS.map((link) => (
+          {NAV_LINKS.map((link: any) => (
             <a
               key={link.href}
               href={link.href}

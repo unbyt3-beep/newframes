@@ -48,7 +48,7 @@ export default function Clientele() {
       
       <div className={styles.scrollWrapper}>
         <div ref={scrollRef} className={styles.scrollContent}>
-          {displayList.map((client, index) => (
+          {displayList.map((client: any, index: number) => (
             <div key={index} className={styles.clientItem}>
               <span className={styles.clientName}>{client.name}</span>
             </div>

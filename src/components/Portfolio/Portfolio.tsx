@@ -43,7 +43,7 @@ export default function Portfolio() {
         </div>
 
         <div className={styles.filters}>
-          {CATEGORIES.map((cat) => (
+          {CATEGORIES.map((cat: string) => (
             <button
               key={cat}
               className={`${styles.filterBtn} ${activeCategory === cat ? styles.filterActive : ""}`}
@@ -55,7 +55,7 @@ export default function Portfolio() {
         </div>
 
         <div className={styles.grid} ref={gridRef}>
-          {filtered.map((exec, i) => (
+          {filtered.map((exec: any, i: number) => (
             <div
               key={exec.id}
               className={`${styles.card} ${hoveredId && hoveredId !== exec.id ? styles.cardDimmed : ""}`}
