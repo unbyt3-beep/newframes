@@ -1,0 +1,100 @@
+.section {
+  background: var(--color-bg-card);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;
+}
+
+.swotCard {
+  background: var(--color-white);
+  padding: 3.5rem;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.swotCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+}
+
+.strengths::before { background: #10b981; }
+.weaknesses::before { background: #f59e0b; }
+.opportunities::before { background: #3b82f6; }
+.threats::before { background: #ef4444; }
+
+.swotCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+  border-color: transparent;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.letter {
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 1;
+  font-family: var(--font-primary);
+  opacity: 0.15;
+}
+
+.strengths .letter { color: #10b981; opacity: 0.3; }
+.weaknesses .letter { color: #f59e0b; opacity: 0.3; }
+.opportunities .letter { color: #3b82f6; opacity: 0.3; }
+.threats .letter { color: #ef4444; opacity: 0.3; }
+
+.cardTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.listItem {
+  position: relative;
+  padding-left: 2rem;
+  margin-bottom: 1.25rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
+.listItem::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--color-brand);
+  font-weight: 700;
+}
+
+@media (max-width: 992px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,200 @@
+.about {
+  border-top: 1px solid var(--color-border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+  margin-bottom: 6rem;
+}
+
+.heading {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.accent {
+  color: var(--color-brand);
+}
+
+/* Image */
+.right {
+  display: flex;
+  justify-content: center;
+}
+
+.imageWrap {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.1);
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.imageBorder {
+  position: absolute;
+  inset: -12px;
+  border: 2px solid var(--color-brand);
+  border-radius: calc(var(--radius-lg) + 4px);
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Pillars */
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.pillar {
+  padding: 2.5rem;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.pillar:hover {
+  background: var(--color-white);
+  border-color: var(--color-brand);
+  transform: translateY(-8px);
+  box-shadow: 0 24px 60px rgba(229, 84, 27, 0.08),
+              0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.pillarNum {
+  font-family: var(--font-primary);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-brand);
+  opacity: 0.2;
+}
+
+.pillarDivider {
+  width: 40px;
+  height: 2px;
+  background: var(--color-brand);
+  margin: 1.5rem 0;
+}
+
+.pillarTitle {
+  font-family: var(--font-primary);
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.pillarDesc {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  font-weight: 300;
+}
+
+/* Vision Section */
+.visionSection {
+  margin-top: 8rem;
+  padding-top: 5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.strategySection {
+  margin-top: 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+}
+
+.strategyBlock {
+  width: 100%;
+}
+
+.strategyTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-brand);
+  letter-spacing: 0.15em;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+  display: inline-block;
+}
+
+.visionGrid, .missionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2.5rem;
+}
+
+.visionCard, .missionCard {
+  background: var(--color-white);
+  padding: 3rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  gap: 1.5rem;
+}
+
+.visionCard:hover, .missionCard:hover {
+  border-color: var(--color-brand);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.visionIcon, .missionIcon {
+  font-size: 1.5rem;
+  color: var(--color-brand);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.visionText, .missionText {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  font-weight: 500;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .visionGrid, .missionGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .visionCard, .missionCard {
+    padding: 2rem;
+  }
+  
+  .visionText, .missionText {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .visionGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .visionCard {
+    padding: 2rem;
+  }
+}

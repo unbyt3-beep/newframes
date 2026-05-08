@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" fill="none">
+  <!-- Icon -->
+  <rect x="18" y="4" width="52" height="52" rx="2" stroke="#E5541B" stroke-width="6" fill="none"/>
+  <rect x="4" y="22" width="52" height="52" rx="2" stroke="#E5541B" stroke-width="6" fill="none"/>
+  <!-- Text -->
+  <text x="86" y="42" font-family="Outfit, sans-serif" font-size="32" font-weight="700" fill="#E5541B" letter-spacing="1">FRAMES</text>
+  <text x="148" y="42" font-family="Outfit, sans-serif" font-size="18" font-weight="400" fill="#888" letter-spacing="0" dy="-1">N</text>
+  <text x="86" y="72" font-family="Outfit, sans-serif" font-size="32" font-weight="700" fill="#E5541B" letter-spacing="1">SPACES</text>
+  <text x="86" y="90" font-family="Outfit, sans-serif" font-size="11" font-weight="500" fill="#888" letter-spacing="4">PRECISION IN EVERY CORNER</text>
+</svg>

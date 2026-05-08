@@ -1,0 +1,229 @@
+.portfolio {
+  border-top: 1px solid var(--color-border);
+}
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.heading {
+  margin: 1rem 0;
+}
+
+.accent {
+  color: var(--color-brand);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 3rem;
+}
+
+.filterBtn {
+  padding: 0.55rem 1.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  background: transparent;
+  font-family: var(--font-primary);
+}
+
+.filterBtn:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-hover);
+  background: var(--color-bg-card-hover);
+}
+
+.filterActive {
+  color: var(--color-white) !important;
+  background: var(--color-brand) !important;
+  border-color: var(--color-brand) !important;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 340px;
+  gap: 1.5rem;
+}
+
+.card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.15);
+}
+
+.cardDimmed {
+  opacity: 0.4;
+  filter: grayscale(0.4);
+}
+
+.cardImage {
+  position: absolute;
+  inset: 0;
+}
+
+.cardImg {
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card:hover .cardImg {
+  transform: scale(1.08);
+}
+
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 20%, rgba(0, 0, 0, 0.75) 100%);
+}
+
+.cardBadge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  background: var(--color-brand);
+  border-radius: var(--radius-full);
+}
+
+.cardContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  z-index: 1;
+  color: #fff;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+}
+
+.dot {
+  color: var(--color-brand);
+}
+
+.cardTitle {
+  font-family: var(--font-primary);
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.card:hover .cardTitle {
+  color: var(--color-brand-light);
+}
+
+.cardDesc {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  font-weight: 300;
+}
+
+.card:hover .cardDesc {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cardStats {
+  display: flex;
+  gap: 1.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+}
+
+.card:hover .cardStats {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cardStat {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardStatValue {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-brand-light);
+}
+
+.cardStatLabel {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+}
+
+@media (max-width: 968px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 300px;
+  }
+
+  .card:first-child {
+    grid-row: span 1 !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 320px;
+  }
+
+  .filters {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .filterBtn {
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,172 @@
+.hero {
+  position: relative;
+  height: 100dvh;
+  min-height: 650px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding-top: 90px;
+  box-sizing: border-box;
+}
+
+.bgImage {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.bgOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(250, 250, 248, 0.6) 0%,
+    rgba(250, 250, 248, 0.85) 50%,
+    rgba(250, 250, 248, 1) 100%
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 1050px;
+  padding: 0 2rem;
+  width: 100%;
+}
+
+.labelWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+.labelLine {
+  width: 60px;
+  height: 1px;
+  background: var(--color-brand);
+  opacity: 0.5;
+}
+
+.title {
+  font-family: var(--font-primary);
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  perspective: 600px;
+}
+
+.titleLine {
+  display: block;
+  overflow: hidden;
+}
+
+.titleWord {
+  display: inline-block;
+}
+
+.titleAccent {
+  color: var(--color-brand);
+}
+
+.subtitle {
+  font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  max-width: 650px;
+  margin: 0 auto 2.5rem;
+  font-weight: 400;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+.scrollIndicator {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.scrollText {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.scrollLine {
+  width: 1px;
+  height: 45px;
+  background: rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.scrollDot {
+  width: 3px;
+  height: 10px;
+  background: var(--color-brand);
+  border-radius: 3px;
+  position: absolute;
+  left: -1px;
+  animation: scrollBounce 2.2s ease-in-out infinite;
+}
+
+@keyframes scrollBounce {
+
+  0%,
+  100% {
+    top: 0;
+  }
+
+  50% {
+    top: 35px;
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: clamp(3rem, 14vw, 5rem);
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .labelWrap {
+    margin-bottom: 1.5rem;
+  }
+}
