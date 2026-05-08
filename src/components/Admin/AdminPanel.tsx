@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   getSiteData,
   saveSiteData,
@@ -20,6 +21,37 @@ import {
 import styles from "./AdminPanel.module.css";
 
 type Tab = "hero" | "about" | "whatWeDo" | "stats" | "services" | "executions" | "blogs" | "clientele" | "settings";
+
+interface ImageUploadFieldProps {
+  label: string;
+  value: string;
+  onChange: (val: string) => void;
+  id: string;
+  uploadingId: string | null;
+  handleFileUpload: (file: File, callback: (url: string) => void, id: string) => void;
+  styles: any;
+}
+
+const ImageUploadField = ({ label, value, onChange, id, uploadingId, handleFileUpload, styles }: ImageUploadFieldProps) => (
+  <div className={styles.editRow}>
+    <label>{label}</label>
+    <div className={styles.imageInputGroup}>
+      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder="Image URL or upload" />
+      <label className={styles.uploadBtn}>
+        {uploadingId === id ? "⏳" : "📤"}
+        <input 
+          type="file" 
+          accept="image/*" 
+          style={{ display: 'none' }} 
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleFileUpload(file, onChange, id);
+          }} 
+        />
+      </label>
+    </div>
+  </div>
+);
 
 export default function AdminPanel() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -156,27 +188,6 @@ export default function AdminPanel() {
       setUploadingId(null);
     }
   };
-
-  const ImageUploadField = ({ label, value, onChange, id }: { label: string; value: string; onChange: (val: string) => void; id: string }) => (
-    <div className={styles.editRow}>
-      <label>{label}</label>
-      <div className={styles.imageInputGroup}>
-        <input value={value} onChange={(e) => onChange(e.target.value)} placeholder="Image URL or upload" />
-        <label className={styles.uploadBtn}>
-          {uploadingId === id ? "⏳" : "📤"}
-          <input 
-            type="file" 
-            accept="image/*" 
-            style={{ display: 'none' }} 
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) handleFileUpload(file, onChange, id);
-            }} 
-          />
-        </label>
-      </div>
-    </div>
-  );
 
   const handlePasscodeChange = () => {
     if (newPasscode.length < 6) {
@@ -404,7 +415,7 @@ export default function AdminPanel() {
             {error && <p className={styles.gateError}>{error}</p>}
             <button type="submit" className={styles.gateBtn}>Access Panel</button>
           </form>
-          <a href="/" className={styles.gateBack}>← Back to Website</a>
+          <Link href="/" className={styles.gateBack}>← Back to Website</Link>
         </div>
       </div>
     );
@@ -448,7 +459,7 @@ export default function AdminPanel() {
         </nav>
 
         <div className={styles.sidebarBottom}>
-          <a href="/" className={styles.viewSite}>View Website →</a>
+          <Link href="/" className={styles.viewSite}>View Website →</Link>
           <button className={styles.logoutBtn} onClick={handleLogout}>Logout</button>
         </div>
       </aside>
@@ -506,6 +517,9 @@ export default function AdminPanel() {
                   value={localData.hero.imageUrl} 
                   onChange={(url) => updateHero({ imageUrl: url })} 
                   id="hero-upload"
+                  uploadingId={uploadingId}
+                  handleFileUpload={handleFileUpload}
+                  styles={styles}
                 />
                 {localData.hero.imageUrl && (
                   <div className={styles.imagePreview}>
@@ -542,6 +556,9 @@ export default function AdminPanel() {
                   value={localData.about.imageUrl} 
                   onChange={(url) => updateAbout({ imageUrl: url })} 
                   id="about-upload"
+                  uploadingId={uploadingId}
+                  handleFileUpload={handleFileUpload}
+                  styles={styles}
                 />
                 {localData.about.imageUrl && (
                   <div className={styles.imagePreview}>
@@ -567,6 +584,9 @@ export default function AdminPanel() {
                       value={item.imageUrl} 
                       onChange={(url) => updateWhatWeDo(item.id, { imageUrl: url })} 
                       id={`wwd-${item.id}`}
+                      uploadingId={uploadingId}
+                      handleFileUpload={handleFileUpload}
+                      styles={styles}
                     />
                   </div>
                   <div className={styles.editRow}>
@@ -634,6 +654,9 @@ export default function AdminPanel() {
                       value={svc.imageUrl} 
                       onChange={(url) => updateService(svc.id, { imageUrl: url })} 
                       id={`svc-${svc.id}`}
+                      uploadingId={uploadingId}
+                      handleFileUpload={handleFileUpload}
+                      styles={styles}
                     />
                   </div>
                   <div className={styles.editRow}><label>Description</label><textarea value={svc.description} onChange={(e) => updateService(svc.id, { description: e.target.value })} rows={3} /></div>
@@ -675,6 +698,9 @@ export default function AdminPanel() {
                     value={exec.imageUrl} 
                     onChange={(url) => updateExecution(exec.id, { imageUrl: url })} 
                     id={`exec-${exec.id}`}
+                    uploadingId={uploadingId}
+                    handleFileUpload={handleFileUpload}
+                    styles={styles}
                   />
                   {exec.imageUrl && <div className={styles.imagePreview}><img src={exec.imageUrl} alt="Execution preview" /></div>}
                   <button className={styles.doneBtn} onClick={() => setEditingItem(null)}>Done Editing</button>
@@ -712,6 +738,9 @@ export default function AdminPanel() {
                     value={blog.imageUrl} 
                     onChange={(url) => updateBlog(blog.id, { imageUrl: url })} 
                     id={`blog-${blog.id}`}
+                    uploadingId={uploadingId}
+                    handleFileUpload={handleFileUpload}
+                    styles={styles}
                   />
                   {blog.imageUrl && <div className={styles.imagePreview}><img src={blog.imageUrl} alt="Blog preview" /></div>}
                   <div className={styles.editRow}>
@@ -747,6 +776,9 @@ export default function AdminPanel() {
                     value={client.logo} 
                     onChange={(url) => updateClient(index, { logo: url })} 
                     id={`client-${index}`}
+                    uploadingId={uploadingId}
+                    handleFileUpload={handleFileUpload}
+                    styles={styles}
                   />
                 </div>
                 {client.logo && (
