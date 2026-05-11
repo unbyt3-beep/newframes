@@ -7,7 +7,6 @@ import Clientele from "@/components/Clientele/Clientele";
 import WhatWeDo from "@/components/WhatWeDo/WhatWeDo";
 import Services from "@/components/Services/Services";
 import Portfolio from "@/components/Portfolio/Portfolio";
-import SWOTAnalysis from "@/components/SWOT/SWOT";
 import ThreatsToStrengths from "@/components/ThreatsToStrengths/ThreatsToStrengths";
 import Stats from "@/components/Stats/Stats";
 import Blog from "@/components/Blog/Blog";
@@ -25,7 +24,6 @@ export default function Home() {
       <Clientele />
       <Services />
       <Portfolio />
-      <SWOTAnalysis />
       <ThreatsToStrengths />
       <Stats />
       <Blog />

@@ -22,7 +22,6 @@ if (getFuncStart !== -1 && saveFuncEnd !== -1) {
     testimonials: defaultTestimonials,
     stats: defaultStats,
     whatWeDo: defaultWhatWeDo,
-    swot: defaultSWOT,
     threatsToStrengths: defaultThreatsToStrengths,
     clientele: defaultClientele,
   };
@@ -45,7 +44,6 @@ if (getFuncStart !== -1 && saveFuncEnd !== -1) {
         testimonials: parsed.testimonials || defaultTestimonials,
         stats: parsed.stats || defaultStats,
         whatWeDo: parsed.whatWeDo || defaultWhatWeDo,
-        swot: parsed.swot || defaultSWOT,
         threatsToStrengths: parsed.threatsToStrengths || defaultThreatsToStrengths,
         clientele: parsed.clientele || defaultClientele,
       };

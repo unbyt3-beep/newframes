@@ -78,7 +78,6 @@ export interface SiteData {
   testimonials: Testimonial[];
   stats: Stat[];
   whatWeDo: WhatWeDoItem[];
-  swot: SWOTData;
   threatsToStrengths: ThreatToStrengthItem[];
   clientele: { name: string; logo: string }[];
 }
@@ -96,12 +95,7 @@ export interface WhatWeDoItem {
   imageUrl: string;
 }
 
-export interface SWOTData {
-  strengths: string[];
-  weaknesses: string[];
-  opportunities: string[];
-  threats: string[];
-}
+
 
 // ── Defaults ─────────
 
@@ -148,34 +142,7 @@ export const defaultWhatWeDo: WhatWeDoItem[] = [
   },
 ];
 
-export const defaultSWOT: SWOTData = {
-  strengths: [
-    "Expertise & experience: Specialized knowledge in project planning, execution, and monitoring across industries.",
-    "Process efficiency: Ability to streamline workflow, reduce delays, and optimize resource allocation.",
-    "Risk management: Strong frameworks for identifying, mitigating, and managing risk.",
-    "Client trust: Reputation for delivering projects on time."
-  ],
-  weaknesses: [
-    "Dependence",
-    "Limited differentiation.",
-    "Scalability challenges.",
-    "Resistance to change."
-  ],
-  opportunities: [
-    "Growing demand.",
-    "Digital transformation.",
-    "Global transformation.",
-    "Sustainable project.",
-    "Training & advisory services."
-  ],
-  threats: [
-    "Economic uncertainty.",
-    "Competition.",
-    "Technology disruption.",
-    "Client in-house teams.",
-    "Regulatory & compliance risk."
-  ],
-};
+
 
 export const defaultThreatsToStrengths: ThreatToStrengthItem[] = [
   {
@@ -401,7 +368,6 @@ export async function getSiteData(): Promise<SiteData> {
     testimonials: defaultTestimonials,
     stats: defaultStats,
     whatWeDo: defaultWhatWeDo,
-    swot: defaultSWOT,
     threatsToStrengths: defaultThreatsToStrengths,
     clientele: defaultClientele,
   };
@@ -425,7 +391,6 @@ export async function getSiteData(): Promise<SiteData> {
         testimonials: parsed.testimonials || defaultTestimonials,
         stats: parsed.stats || defaultStats,
         whatWeDo: parsed.whatWeDo || defaultWhatWeDo,
-        swot: parsed.swot || defaultSWOT,
         threatsToStrengths: parsed.threatsToStrengths || defaultThreatsToStrengths,
         clientele: parsed.clientele || defaultClientele,
       };

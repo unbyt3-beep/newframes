@@ -211,7 +211,6 @@ export default function AdminPanel() {
       case 'services': defaultVal = (await import('@/data/siteData')).defaultServices; break;
       case 'stats': defaultVal = (await import('@/data/siteData')).defaultStats; break;
       case 'whatWeDo': defaultVal = (await import('@/data/siteData')).defaultWhatWeDo; break;
-      case 'swot': defaultVal = (await import('@/data/siteData')).defaultSWOT; break;
       case 'threatsToStrengths': defaultVal = (await import('@/data/siteData')).defaultThreatsToStrengths; break;
       case 'clientele': defaultVal = (await import('@/data/siteData')).defaultClientele; break;
       case 'executions': defaultVal = (await import('@/data/siteData')).defaultExecutions; break;
@@ -820,7 +819,6 @@ export default function AdminPanel() {
                   <button onClick={() => handleReset('whatWeDo')}>Reset What We Do</button>
                   <button onClick={() => handleReset('services')}>Reset Services</button>
                   <button onClick={() => handleReset('stats')}>Reset Stats</button>
-                  <button onClick={() => handleReset('swot')}>Reset SWOT</button>
                   <button onClick={() => handleReset('threatsToStrengths')}>Reset Transformation</button>
                   <button onClick={() => handleReset('clientele')}>Reset Clientele</button>
                 </div>
